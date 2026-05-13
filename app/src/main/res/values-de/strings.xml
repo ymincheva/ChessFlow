@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ChessFlow</string>
+    <string name="welcome">Willkommen bei ChessFlow</string>
+    <string name="welcome_text">Lerne von den Legenden! Löse einzigartige Meisterklassen-Rätsel, die aus historischen Partien generiert wurden, und verbessere deine Taktik. Steigere deine Elo-Zahl noch heute mit ChessFlow!</string>
+    <string name="sign_in_with_google">Mit Google anmelden</string>
+    <string name="puzzles">Rätsel</string>
+    <string name="analyze">Analysieren</string>
+    <string name="profile">Profil</string>
+    <string name="about">Um</string>
+    <string name="select_difficulty">Schwierigkeitsgrad auswählen :</string>
+    <string name="only_the_move_is_allowed">Nur der beste Zug ist erlaubt.</string>
+    <string name="great_best_move">Großartig! Das war die beste Entscheidung.</string>
+    <string name="correct_move">Super! Richtiger Zug.</string>
+    <string name="wrong_move">Falsche Bewegung.</string>
+
+    <string name="chess_position_analysis">Schachpositionsanalyse</string>
+    <string name="chess_puzzle">Schachrätsel</string>
+
+    <string name="second_best_move">Zweitbeste Option</string>
+    <string name="played_move">Gespielter Zug</string>
+    <string name="source_game">Source Game</string>
+    <string name="event">Ereignis</string>
+    <string name="date">Datum</string>
+    <string name="hide_answer">Antwort ausblenden</string>
+    <string name="show_answer">Antwort anzeigen</string>
+
+    <string name="select_board_image">Boardbild auswählen</string>
+    <string name="analyzing">Analyzing...</string>
+    <string name="analyze_position">Position analysieren</string>
+    <string name="evaluation">Auswertung: %1$s</string>
+    <string name="puzzel_best_move">Beste Entscheidung</string>
+    <string name="best_move">Beste Entscheidung: %1$s</string>
+    <string name="parse_chessboard">Schachbrett analysieren</string>
+
+    <string name="field_correction">Feldkorrektur</string>
+    <string name="color">Farbe</string>
+    <string name="white">Weiß</string>
+    <string name="black">Schwarz</string>
+    <string name="choose_a_figure">Wählen Sie eine Figur</string>
+    <string name="delete_the_shape">Löschen (Leeres Feld)</string>
+    <string name="save">Speichern</string>
+    <string name="cansel">Stornieren</string>
+
+    <string name="camera">Kamera</string>
+    <string name="confirm_clear_title">Clear Board</string>
+    <string name="confirm_clear_message">Dadurch werden alle Spielsteine ​​vom Brett entfernt. Bist du sicher?</string>
+    <string name="action_clear">Klar</string>
+    <string name="action_cancel">Stornieren</string>
+
+    <string name="english">Englisch</string>
+    <string name="bulgarian">Bulgarisch</string>
+    <string name="german">Deutsch</string>
+
+    <string name="diff_very_easy">Sehr einfach</string>
+    <string name="diff_easy">Einfach</string>
+    <string name="diff_medium">Medium</string>
+    <string name="diff_hard">Hart</string>
+    <string name="diff_very_hard">Sehr schwer</string>
+
+    <string name="player_profile">Spielerprofil</string>
+    <string name="masterclass_progress">Masterclass Progress</string>
+
+    <string name="puzzles_solved">Herzlichen Glückwunsch! Alle Rätsel hier sind gelöst!</string>
+    <string name="error_loading">Fehler beim Laden: %1$s</string>
+    <string name="white_to_move">Weiß ist am Zug.</string>
+    <string name="black_to_move">Schwarz hat den Zug.</string>
+    <string name="try_again_count">Versuchen Sie es erneut (%d)</string>
+    <string name="opponent_played_this">Letzter Zug: %s. Du bist dran!</string>
+    <string name="answer_revealed_warning">Die Lösung wird angezeigt. Das Rätsel wird nicht als gelöst markiert.</string>
+    <string name="correct_move_but_revealed">Ein kluger Schachzug, aber die Antwort lag schon auf der Hand.</string>
+
+    <string name="about_title">Über ChessFlow</string>
+    <string name="about_description">Erleben Sie die Logik von Großmeistern.\n\n• Legendäre Schachaufgaben\n• Mit der Stockfish-Engine validiert\n• Erstellt mit Jetpack Compose.</string>
+    <string name="open_source_notice_title">Open-Source-Hinweis</string>
+    <string name="stockfish_license_text">Diese App verwendet die Open-Source-Schach-Engine Stockfish (https://stockfishchess.org), die unter der GNU General Public License v3 (GPLv3) lizenziert ist.\n\nSie dürfen den Quellcode dieser App unter derselben Lizenz frei verwenden, verändern und weitergeben.</string>
+    <string name="view_source_code">Quellcode anzeigen</string>
+    <string name="read_gpl_license">Lesen Sie die vollständige GPLv3-Lizenz.</string>
+    <string name="developer_credits">© 2026 Yanka Mincheva. Lizenziert unter GPLv3.</string>
+
+    <string name="ai_board_recognition_is_coming">Die KI-gestützte Spielfelderkennung kommt im nächsten Update! Aktuell können Sie die Positionen manuell festlegen.</string>
+    <string name="no_internet_connection">Keine Internetverbindung. Bitte überprüfen Sie Ihr Netzwerk.</string>
+    <string name="retry">Wiederholen</string>
+</resources>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ChessFlow</string>
+    <string name="welcome">Добре дошли в ChessFlow</string>
+    <string name="welcome_text">Учете се от легендите! Решавайте уникални майсторски пъзели, генерирани от исторически игри, и усъвършенствайте тактиката си. Повишете ELO с ChessFlow още днес!</string>
+    <string name="sign_in_with_google">Влез с Google</string>
+    <string name="puzzles">Пъзели</string>
+    <string name="analyze">Анализирайте</string>
+    <string name="profile">Профил</string>
+    <string name="about">Относно</string>
+    <string name="select_difficulty">Изберете трудност :</string>
+    <string name="only_the_move_is_allowed">Само най-добрият ход е разрешен.</string>
+    <string name="great_best_move">Страхотно! Това беше най-добрият ход..</string>
+    <string name="correct_move">Страхотно! Правилен ход.</string>
+    <string name="wrong_move">Грешен ход.</string>
+
+    <string name="chess_position_analysis">Анализ на шахматните позиции</string>
+    <string name="chess_puzzle">Шахматен пъзел</string>
+
+    <string name="evaluation">Оценка: %1$s</string>
+    <string name="puzzel_best_move">Най-добър ход</string>
+    <string name="best_move">Най-добър ход: %1$s</string>
+    <string name="second_best_move">Вторият най-добър ход</string>
+    <string name="played_move">Изигран ход</string>
+    <string name="source_game">Източник на играта</string>
+    <string name="event">Събитие</string>
+    <string name="date">Дата</string>
+    <string name="hide_answer">Скриване на отговора</string>
+    <string name="show_answer">Покажи отговор</string>
+
+    <string name="select_board_image">Изберете изображение на дъската</string>
+    <string name="analyzing">Анализиране...</string>
+    <string name="analyze_position">Анализирайте позицията</string>
+    <string name="parse_chessboard">Разбор на шахматна дъска</string>
+
+    <string name="field_correction">Корекция на полето</string>
+    <string name="color">Цвят</string>
+    <string name="white">Бяло</string>
+    <string name="black">Черно</string>
+    <string name="choose_a_figure">Изберете фигура</string>
+    <string name="delete_the_shape">Изтриване (Празно поле)</string>
+    <string name="save">Запазване</string>
+    <string name="cansel">Отказ</string>
+
+    <string name="camera">Камера</string>
+    <string name="confirm_clear_title">Изчисти дъската</string>
+    <string name="confirm_clear_message">Това ще премахне всички фигури от дъската. Сигурни ли сте?</string>
+    <string name="action_clear">Изчисти</string>
+    <string name="action_cancel">Отказ</string>
+
+    <string name="english">Английски</string>
+    <string name="bulgarian">Български</string>
+    <string name="german">Немски</string>
+
+    <string name="diff_very_easy">Много лесно</string>
+    <string name="diff_easy">Лесно</string>
+    <string name="diff_medium">Средно</string>
+    <string name="diff_hard">Трудно</string>
+    <string name="diff_very_hard">Много трудно</string>
+
+    <string name="player_profile">Профил на играча</string>
+    <string name="masterclass_progress">Masterclass Progress</string>
+
+    <string name="puzzles_solved">Поздравления! Всички пъзели тук са решени!</string>
+    <string name="error_loading">Грешка при зареждане: %1$s</string>
+    <string name="white_to_move">Белите са на ход.</string>
+    <string name="black_to_move">Черните са на ход.</string>
+    <string name="try_again_count">Опитай още (%d)</string>
+    <string name="opponent_played_this">Последен ход: %s. Твой ред е!</string>
+    <string name="answer_revealed_warning">Отговорът е показан. Пъзелът няма да бъде отчетен като решен.</string>
+    <string name="correct_move_but_revealed">Верен ход, но беше видян отговора.</string>
+
+    <string name="about_title">Относно ChessFlow</string>
+    <string name="about_description">Изживейте потока на гросмайсторската логика.\n\n• Емблематични пъзели от шахматни легенди\n• Валидирано от енджина Stockfish\n• Създадено с Jetpack Compose.</string>
+    <string name="open_source_notice_title">Open Source Notice</string>
+    <string name="stockfish_license_text">Това приложение използва шахматния енджин с отворен код Stockfish (https://stockfishchess.org), лицензиран под GNU General Public License v3 (GPLv3).\n\nМожете свободно да използвате, променяте и споделяте изходния код на това приложение под същия лиценз..</string>
+    <string name="view_source_code">Преглед на изходния код</string>
+    <string name="read_gpl_license">Прочетете пълния GPLv3 лиценз</string>
+    <string name="developer_credits">© 2026 Yanka Mincheva. Лицензирано под GPLv3.</string>
+
+    <string name="ai_board_recognition_is_coming">Разпознаването на борда с изкуствен интелект ще бъде включено в следващата актуализация! В момента можете да задавате позиции ръчно.</string>
+    <string name="no_internet_connection">Няма интернет връзка. Моля, проверете мрежата си.</string>
+    <string name="retry">Опитай отново</string>
+</resources>

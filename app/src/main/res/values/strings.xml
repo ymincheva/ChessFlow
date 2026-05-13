@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">ChessFlow</string>
+    <string name="welcome">Welcome to ChessFlow</string>
+    <string name="welcome_text">Learn from the legends! Solve unique Masterclass Puzzles generated from historical games and sharpen your tactics. Elevate your ELO with ChessFlow today!</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="puzzles">Puzzles</string>
+    <string name="analyze">Analyze</string>
+    <string name="profile">Profile</string>
+    <string name="about">About</string>
+    <string name="select_difficulty">Select Difficulty :</string>
+    <string name="only_the_move_is_allowed">Only the best move is allowed.</string>
+    <string name="great_best_move">Great! That was the best move.</string>
+    <string name="correct_move">Great! Correct move.</string>
+    <string name="wrong_move">Wrong move.</string>
+
+    <string name="chess_position_analysis">Chess Position Analysis</string>
+    <string name="chess_puzzle">Chess Puzzle</string>
+
+    <string name="evaluation">Evaluation: %1$s</string>
+    <string name="puzzel_best_move">Best move</string>
+    <string name="best_move">Best move: %1$s</string>
+    <string name="second_best_move">Second Best Move</string>
+    <string name="played_move">Played Move</string>
+    <string name="source_game">Source Game</string>
+    <string name="event">Event</string>
+    <string name="date">Date</string>
+    <string name="hide_answer">Hide Answer</string>
+    <string name="show_answer">Show Answer</string>
+
+    <string name="select_board_image">Select Board Image</string>
+    <string name="analyzing">Analyzing...</string>
+    <string name="analyze_position">Analyze Position</string>
+    <string name="parse_chessboard">Parse Chessboard</string>
+
+    <string name="field_correction">Field correction</string>
+    <string name="color">Color</string>
+    <string name="white">White</string>
+    <string name="black">Black</string>
+    <string name="choose_a_figure">Choose a figure</string>
+    <string name="delete_the_shape">Delete (Empty field)</string>
+    <string name="save">Save</string>
+    <string name="cansel">Cancel</string>
+
+    <string name="camera">Camera</string>
+    <string name="confirm_clear_title">Clear Board</string>
+    <string name="confirm_clear_message">This will remove all pieces from the board. Are you sure?</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="english">English</string>
+    <string name="bulgarian">Bulgarian</string>
+    <string name="german">German</string>
+
+    <string name="diff_very_easy">Very Easy</string>
+    <string name="diff_easy">Easy</string>
+    <string name="diff_medium">Medium</string>
+    <string name="diff_hard">Hard</string>
+    <string name="diff_very_hard">Very Hard</string>
+
+    <string name="player_profile">Player Profile</string>
+    <string name="masterclass_progress">Masterclass Progress</string>
+    <string name="puzzles_solved">Congratulations! All the puzzles here are solved!</string>
+    <string name="error_loading">Error loading: %1$s</string>
+    <string name="white_to_move">White is on the move.</string>
+    <string name="black_to_move">Black has the move.</string>
+    <string name="try_again_count">Try again (%d)</string>
+    <string name="opponent_played_this">Last move: %s. It\'s your turn!</string>
+    <string name="answer_revealed_warning">The answer is shown. The puzzle will not be marked as solved.</string>
+    <string name="correct_move_but_revealed">A wise move, but the answer was already seen..</string>
+
+    <string name="about_title">About ChessFlow</string>
+    <string name="about_description">Experience the flow of grandmaster logic.\n\n• Iconic puzzles from chess legends\n• Validated by Stockfish engine\n• Built with Jetpack Compose</string>
+    <string name="open_source_notice_title">Open Source Notice</string>
+    <string name="stockfish_license_text">This app uses the open-source Stockfish chess engine (https://stockfishchess.org) licensed under the GNU General Public License v3 (GPLv3).\n\nYou are free to use, modify, and share this app\'s source code under the same license.</string>
+    <string name="view_source_code">View Source Code</string>
+    <string name="read_gpl_license">Read Full GPLv3 License</string>
+    <string name="developer_credits">© 2026 Yanka Mincheva. Licensed under GPLv3.</string>
+
+    <string name="ai_board_recognition_is_coming">AI Board Recognition is coming in the next update! You can currently set up positions manually.</string>
+    <string name="no_internet_connection">No internet connection. Please check your network.</string>
+    <string name="retry">Retry</string>
+</resources>

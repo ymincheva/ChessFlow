@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="graphite">#FF444444</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="brown">#FF5D4037</color>
+    <color name="brown_little">#FF8D6E63</color>
+    <color name="olive">#FF6F6134</color>
+    <color name="olive_drab">#FF6B8E23</color>
+    <color name="olive_yellow">#FF9ACD32</color>
+    <color name="olive_dark">#FF556B2F</color>
+    <color name="olive_soft">#FFB1A579</color>
+    <color name="olive_lighter">#FF9C8C5E</color>
+    <color name="ecru">#FFE1C68f</color>
+    <color name="champagne">#FFfAE7C9</color>
+    <color name="vanilla_paper">#FFFFFDF8</color>
+    <color name="moss_dark">#FF525333</color>
+    <color name="moss_dark_light">#FF626442</color>
+    <color name="orange_persian">#FFCF8852</color>
+    <color name="chess_light">#F0D9B5</color>
+    <color name="chess_dark">#B58863</color>
+    <color name="red_brownish">#FF8B2E2E</color>
+    <color name="red_burgundy">#FF7A1F1F</color>
+</resources>
