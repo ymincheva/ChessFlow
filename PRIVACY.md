@@ -24,5 +24,8 @@ To assist us in analyzing how our Service is used (e.g., crash reporting).
 We value your trust in providing us with your Personal Information. We use industry-standard tools (Firebase) to protect your data, but remember that no method of transmission over the internet is 100% secure.
 6. Changes to This Privacy Policy
 We may update our Privacy Policy from time to time. You are advised to review this page periodically for any changes.
-7. Contact Us
+7. Account Deletion
+Users can delete their accounts and all associated data (such as their email address) directly within the Application's settings. 
+Alternatively, you can request account deletion by contacting us at: yanka.mincheva@gmail.com. We will process your request within 7 business days.
+8. Contact Us
 If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us at: yanka.mincheva@gmail.com
