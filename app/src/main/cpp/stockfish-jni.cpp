@@ -27,15 +27,18 @@ void stockfish_main() {
     const int argc = 1;
     const char *argv[] = {"stockfish"};
 
-    std::cout << engine_info() << std::endl;
+    try {
+        Bitboards::init();
+        Position::init();
 
-    Bitboards::init();
-    Position::init();
+        UCIEngine uci(argc, const_cast<char **>(argv));
+        Tune::init(uci.engine_options());
 
-    UCIEngine uci(argc, const_cast<char **>(argv));
-    Tune::init(uci.engine_options());
-
-    uci.loop();
+        uci.loop();
+    } catch (...) {
+        std::cout << "info string Engine exited." << std::endl;
+        std::cout.flush();
+    }
 }
 
 extern "C" {

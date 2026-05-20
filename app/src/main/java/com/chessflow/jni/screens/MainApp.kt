@@ -6,6 +6,7 @@ import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,21 +30,49 @@ fun MainApp(authViewModel: AuthViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     val user by authViewModel.user.collectAsState()
 
-    val startDest = if (user == null) "login" else "home"
+    val startDest = remember(user) { if (user == null) "login" else "home" }
+
+    LaunchedEffect(user) {
+        if (user == null) {
+            navController.navigate("login") {
+                popUpTo(0) { inclusive = true }
+                launchSingleTop = true
+            }
+        } else {
+            if (navController.currentBackStackEntry?.destination?.route == "login") {
+                navController.navigate("home") {
+                    popUpTo("login") { inclusive = true }
+                }
+            }
+        }
+    }
 
     NavHost(navController = navController, startDestination = startDest) {
         composable("login") {
-            LoginScreen(authViewModel)
+            LoginScreen(
+                authViewModel = authViewModel,
+                onLoginSuccess = {
+                }
+            )
         }
         composable("home") {
             HomeScreen(navController, authViewModel)
         }
         composable("puzzles") { PuzzleScreen() }
         composable("analyze") { AnalyzeScreen() }
-        composable("profile") { ProfileScreen() }
+        composable("profile") {
+            ProfileScreen(
+                onAccountDeleted = {
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
         composable("about") { AboutScreen() }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,24 +100,39 @@ fun HomeScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                         onDismissRequest = { showLanguageMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text(stringResource(
-                                R.string.english)) },
+                            text = {
+                                Text(
+                                    stringResource(
+                                        R.string.english
+                                    )
+                                )
+                            },
                             onClick = {
                                 changeLanguage("en")
                                 showLanguageMenu = false
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text(stringResource(
-                                R.string.german)) },
+                            text = {
+                                Text(
+                                    stringResource(
+                                        R.string.german
+                                    )
+                                )
+                            },
                             onClick = {
                                 changeLanguage("de")
                                 showLanguageMenu = false
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text(stringResource(
-                                R.string.bulgarian)) },
+                            text = {
+                                Text(
+                                    stringResource(
+                                        R.string.bulgarian
+                                    )
+                                )
+                            },
                             onClick = {
                                 changeLanguage("bg")
                                 showLanguageMenu = false
@@ -100,7 +144,7 @@ fun HomeScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                             contentDescription = "Logout",
-                            tint = androidx.compose.ui.graphics.Color.White // Корекция на Color
+                            tint = androidx.compose.ui.graphics.Color.White
                         )
                     }
                 },
@@ -110,7 +154,7 @@ fun HomeScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                 )
             )
         }
-    ) {paddingValues ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()

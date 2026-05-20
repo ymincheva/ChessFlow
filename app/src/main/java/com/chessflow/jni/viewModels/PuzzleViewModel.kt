@@ -9,6 +9,7 @@ import com.chessflow.jni.models.Puzzle
 import com.chessflow.jni.repositories.PuzzleRepository
 import com.chessflow.jni.utils.Board
 import com.chessflow.jni.utils.NetworkObserver
+import com.chessflow.jni.utils.UiText
 import com.chessflow.jni.utils.uciToPair
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,13 +40,14 @@ class PuzzleViewModel @Inject constructor(
     private val _selectedSquare = MutableStateFlow<Pair<Int, Int>?>(null)
     val selectedSquare = _selectedSquare.asStateFlow()
 
-    private val _message = MutableStateFlow(R.string.only_the_move_is_allowed)
+    private val _message =
+        MutableStateFlow<UiText>(UiText.ResourceString(R.string.only_the_move_is_allowed))
     val message = _message.asStateFlow()
 
     private val _showAnswer = MutableStateFlow(false)
     val showAnswer = _showAnswer.asStateFlow()
 
-    private val _error = MutableStateFlow<Int?>(null)
+    private val _error = MutableStateFlow<UiText?>(null)
     val error = _error.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
@@ -83,16 +85,15 @@ class PuzzleViewModel @Inject constructor(
 
                 unsolvedPuzzles = repository.loadUnsolvedPuzzles(userId, currentDifficulty)
 
-                Log.d("yansun", "currentDifficulty------------------------------: ${currentDifficulty}")
                 if (unsolvedPuzzles.isNotEmpty()) {
                     currentIndex = 0
                     updateUIWithCurrentPuzzle()
                 } else {
                     _nextPuzzle.value = null
-                    _error.value = R.string.puzzles_solved
+                    _error.value = UiText.ResourceString(R.string.puzzles_solved)
                 }
             } catch (e: Exception) {
-                _error.value = R.string.error_loading
+                _error.value = UiText.ResourceString(R.string.error_loading)
 
             } finally {
                 _isLoading.value = false
@@ -114,12 +115,9 @@ class PuzzleViewModel @Inject constructor(
 
             _nextPuzzle.value = puzzle
 
-            Log.d("yansun", "puzzle------------------------------: ${puzzle.fen}")
-            Log.d("yansun", "puzzle.puzzleId------------------------------: ${puzzle.puzzleId}")
-            Log.d("yansun", "puzzle.bestMove------------------------------: ${puzzle.bestMove}")
             _board.value = Board.parseFEN(puzzle.fen)
             _showAnswer.value = false
-            _message.value = R.string.only_the_move_is_allowed
+            _message.value = UiText.ResourceString(R.string.only_the_move_is_allowed)
             _selectedSquare.value = null
             _lastMoveArg.value = null
             _wrongAttempts.value = 0
@@ -138,14 +136,14 @@ class PuzzleViewModel @Inject constructor(
 
                 _board.value = originalBoard.movePieceIfValid(from, to)
                 _lastMoveArg.value = puzzle.playedMove
-                _message.value = R.string.opponent_played_this
+                _message.value = UiText.ResourceString(R.string.opponent_played_this)
 
                 delay(1500)
 
                 _board.value = originalBoard
 
                 _message.value = if (puzzle.sideToMove == "white")
-                    R.string.white_to_move else R.string.black_to_move
+                    UiText.ResourceString(R.string.white_to_move) else UiText.ResourceString(R.string.black_to_move)
 
             } catch (e: Exception) {
                 Log.e("PuzzleViewModel", "Error in animation: ${e.message}")
@@ -179,7 +177,7 @@ class PuzzleViewModel @Inject constructor(
         _showAnswer.value = !_showAnswer.value
         if (_showAnswer.value) {
             isAnswerRevealedForCurrentPuzzle = true
-            _message.value = R.string.answer_revealed_warning
+            _message.value = UiText.ResourceString(R.string.answer_revealed_warning)
             _lastMoveArg.value = null
         }
     }
@@ -202,24 +200,25 @@ class PuzzleViewModel @Inject constructor(
 
     private fun handleCorrectMove(from: Pair<Int, Int>, to: Pair<Int, Int>) {
         _board.value = _board.value.movePieceIfValid(from, to)
-        _message.value = R.string.correct_move
         _wrongAttempts.value = 0
 
         val userId = auth.currentUser?.uid
         val puzzle = _nextPuzzle.value
 
-        if (isAnswerRevealedForCurrentPuzzle) {
-            _message.value = R.string.correct_move_but_revealed
+        val targetMessage = if (isAnswerRevealedForCurrentPuzzle) {
+            UiText.ResourceString(R.string.correct_move_but_revealed)
         } else {
-            _message.value = R.string.correct_move
             if (userId != null && puzzle != null) {
                 repository.markPuzzleAsSolved(userId, puzzle.puzzleId, currentDifficulty)
             }
+            UiText.ResourceString(R.string.correct_move)
         }
+
+        _message.value = targetMessage
     }
 
     private fun handleWrongMove() {
-        _message.value = R.string.wrong_move
+        _message.value = UiText.ResourceString(R.string.wrong_move)
         _wrongAttempts.value += 1
     }
 

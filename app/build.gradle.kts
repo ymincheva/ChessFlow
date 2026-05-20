@@ -19,8 +19,8 @@ android {
 
         externalNativeBuild {
             cmake {
-                cppFlags("-std=c++17","-DANDROID","-D__ANDROID__", "-fexceptions", "-frtti")
-                arguments("-DANDROID_STL=c++_shared","-DANDROID_ARM_NEON=TRUE")
+                cppFlags("-std=c++17", "-DANDROID", "-D__ANDROID__", "-fexceptions", "-frtti", "-DNDEBUG")
+                arguments("-DANDROID_STL=c++_shared", "-DANDROID_ARM_NEON=TRUE", "-DCMAKE_BUILD_TYPE=Release")
             }
         }
 

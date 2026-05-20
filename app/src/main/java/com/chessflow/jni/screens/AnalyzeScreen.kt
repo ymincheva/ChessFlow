@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,6 +39,8 @@ fun AnalyzeScreen(
     viewModel: AnalyzeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
+    val infoMessageText = state.infoMessage.asString(context)
 
     var showClearDialog by remember { mutableStateOf(false) }
 
@@ -62,7 +65,7 @@ fun AnalyzeScreen(
             },
             dismissButton = {
                 TextButton(onClick = { showClearDialog = false }) {
-                    Text(stringResource(R.string.cansel))
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -146,9 +149,9 @@ fun AnalyzeScreen(
                 }
             }
 
-            if (state.infoMessage.isNotEmpty()) {
+            if (infoMessageText.isNotBlank()) {
                 Text(
-                    text = state.infoMessage,
+                    text = infoMessageText,
                     style = MaterialTheme.typography.labelMedium,
                     color = colorResource(R.color.olive),
                     modifier = Modifier

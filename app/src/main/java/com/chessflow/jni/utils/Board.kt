@@ -64,8 +64,8 @@ class Board(
         }
 
         val rookSquares = mapOf(
-            Pair(7, 7) to "K", Pair(7, 0) to "Q", // Бели топове
-            Pair(0, 7) to "k", Pair(0, 0) to "q"  // Черни топове
+            Pair(7, 7) to "K", Pair(7, 0) to "Q",
+            Pair(0, 7) to "k", Pair(0, 0) to "q"
         )
 
         rookSquares[from]?.let { newRights = newRights.replace(it, "") }

@@ -3,9 +3,11 @@ package com.chessflow.jni.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chessflow.jni.R
 import com.chessflow.jni.StockfishEngine
 import com.chessflow.jni.models.Move
 import com.chessflow.jni.utils.Board
+import com.chessflow.jni.utils.UiText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +20,7 @@ data class AnalyzeState(
     val bestMoveUci: String = "",
     val evaluation: String = "0.0",
     val statusMessage: String = "",
-    val infoMessage: String = "Ready",
+    val infoMessage: UiText = UiText.ResourceString(R.string.msg_ready),
     val boardFen: String = "",
     val board: Board = Board.parseFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
     val bestMove: Move? = null,
@@ -66,22 +68,30 @@ class AnalyzeViewModel : ViewModel() {
         _state.update { it.copy(
             board = Board.parseFEN(emptyFen),
             boardFen = emptyFen,
-            infoMessage = "Board cleared."
+            infoMessage = UiText.ResourceString(R.string.msg_board_cleared)
         ) }
     }
 
     fun analyzePosition(moveTime: Int = 2000) {
         val currentState = _state.value
         val side = currentState.boardFen.split(" ").getOrNull(1) ?: "w"
-
         val cleanFen = currentState.board.toFen(side)
 
-        Log.d("StockfishDebug", "Sending Clean FEN to Engine: $cleanFen")
+        Log.d("ChessFlow", "Sending Clean FEN to Engine: $cleanFen")
+
+        if (!isPositionLegalBeforeAnalysis(cleanFen)) {
+            _state.update { it.copy(
+                isAnalyzing = false,
+                statusMessage = "Illegal position!",
+                infoMessage = UiText.ResourceString(R.string.msg_illegal_position)
+            ) }
+            return
+        }
 
         _state.update { it.copy(
             isAnalyzing = true,
             statusMessage = "Stockfish is thinking...",
-            infoMessage = ""
+            infoMessage = UiText.ResourceString(R.string.msg_stockfish_thinking)
         ) }
 
         StockfishEngine.getNextMove(cleanFen, moveTime)
@@ -92,10 +102,9 @@ class AnalyzeViewModel : ViewModel() {
         val square = currentState.squareToEdit ?: return
 
         val newBoard = currentState.board.withPiece(square.first, square.second, pieceSymbol)
-
         newBoard.castlingRights = currentState.board.castlingRights
 
-        updateBoard(newBoard, "Board updated.")
+        updateBoard(newBoard, UiText.ResourceString(R.string.msg_board_updated))
         stopCorrectionMode()
     }
 
@@ -103,9 +112,11 @@ class AnalyzeViewModel : ViewModel() {
         val newBoard = _state.value.board
         val newFen = newBoard.toFen(side.toString())
 
+        val resId = if (side == 'w') R.string.msg_white_to_move else R.string.msg_black_to_move
+
         _state.update { it.copy(
             boardFen = newFen,
-            infoMessage = if (side == 'w') "White to move" else "Black to move"
+            infoMessage = UiText.ResourceString(resId)
         ) }
     }
 
@@ -114,7 +125,7 @@ class AnalyzeViewModel : ViewModel() {
         _state.update { it.copy(
             board = Board.parseFEN(startFen),
             boardFen = startFen,
-            infoMessage = "Reset to start position."
+            infoMessage = UiText.ResourceString(R.string.msg_reset_start)
         ) }
     }
 
@@ -127,7 +138,7 @@ class AnalyzeViewModel : ViewModel() {
         val currentTurn = currentState.boardFen.split(" ").getOrNull(1) ?: "w"
         val nextTurn = if (currentTurn == "w") "b" else "w"
 
-        updateBoard(newBoard, "Piece moved.", nextTurn)
+        updateBoard(newBoard, UiText.ResourceString(R.string.msg_piece_moved), nextTurn)
     }
 
     fun startCorrectionMode(row: Int, col: Int) {
@@ -143,10 +154,8 @@ class AnalyzeViewModel : ViewModel() {
         _state.update { it.copy(isBoardFlipped = !it.isBoardFlipped) }
     }
 
-
-    private fun updateBoard(newBoard: Board, message: String = "", nextTurn: String? = null) {
+    private fun updateBoard(newBoard: Board, message: UiText = UiText.DynamicString(""), nextTurn: String? = null) {
         val turn = nextTurn ?: (_state.value.boardFen.split(" ").getOrNull(1) ?: "w")
-
         val finalFen = newBoard.toFen(turn)
 
         Log.d("StockfishDebug", "Final Clean FEN: $finalFen")
@@ -173,6 +182,82 @@ class AnalyzeViewModel : ViewModel() {
         val newBoard = currentState.board.withPiece(row, col, "")
         newBoard.castlingRights = currentState.board.castlingRights
 
-        updateBoard(newBoard, "Piece removed")
+        updateBoard(newBoard, UiText.ResourceString(R.string.msg_piece_removed))
+    }
+
+    private fun isPositionLegalBeforeAnalysis(fen: String): Boolean {
+        val parts = fen.split(" ")
+        val boardStr = parts.getOrNull(0) ?: return false
+        val turn = parts.getOrNull(1) ?: "w"
+
+        val rows = boardStr.split("/")
+        if (rows.size != 8) return false
+
+        var whiteKingRow = -1
+        var whiteKingCol = -1
+        var blackKingRow = -1
+        var blackKingCol = -1
+
+        val grid = Array(8) { CharArray(8) { ' ' } }
+
+        for (r in 0 until 8) {
+            var c = 0
+            for (char in rows[r]) {
+                if (char.isDigit()) {
+                    val emptySquares = char.toString().toInt()
+                    c += emptySquares
+                } else {
+                    grid[r][c] = char
+                    if (char == 'K') { whiteKingRow = r; whiteKingCol = c }
+                    if (char == 'k') { blackKingRow = r; blackKingCol = c }
+                    c++
+                }
+            }
+        }
+
+        if (whiteKingRow == -1 || blackKingRow == -1) return false
+
+        val rowDiff = Math.abs(whiteKingRow - blackKingRow)
+        val colDiff = Math.abs(whiteKingCol - blackKingCol)
+        if (rowDiff <= 1 && colDiff <= 1) return false
+
+        val targetKingRow = if (turn == "w") blackKingRow else whiteKingRow
+        val targetKingCol = if (turn == "w") blackKingCol else whiteKingCol
+        val enemyRook = if (turn == "w") 'R' else 'r'
+        val enemyQueen = if (turn == "w") 'Q' else 'q'
+
+        for (c in (targetKingCol - 1) downTo 0) {
+            val p = grid[targetKingRow][c]
+            if (p != ' ') {
+                if (p == enemyRook || p == enemyQueen) return false
+                break
+            }
+        }
+
+        for (c in (targetKingCol + 1) until 8) {
+            val p = grid[targetKingRow][c]
+            if (p != ' ') {
+                if (p == enemyRook || p == enemyQueen) return false
+                break
+            }
+        }
+
+        for (r in (targetKingRow - 1) downTo 0) {
+            val p = grid[r][targetKingCol]
+            if (p != ' ') {
+                if (p == enemyRook || p == enemyQueen) return false
+                break
+            }
+        }
+
+        for (r in (targetKingRow + 1) until 8) {
+            val p = grid[r][targetKingCol]
+            if (p != ' ') {
+                if (p == enemyRook || p == enemyQueen) return false
+                break
+            }
+        }
+
+        return true
     }
 }

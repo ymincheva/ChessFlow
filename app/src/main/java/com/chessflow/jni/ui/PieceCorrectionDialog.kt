@@ -142,7 +142,7 @@ fun PieceCorrectionDialog(
                     containerColor = colorResource(id = R.color.olive_lighter)
                 ), onClick = onDismiss
             ) {
-                Text(stringResource(R.string.cansel))
+                Text(stringResource(R.string.cancel))
             }
         }
     )

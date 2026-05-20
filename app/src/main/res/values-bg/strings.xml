@@ -40,7 +40,7 @@
     <string name="choose_a_figure">Изберете фигура</string>
     <string name="delete_the_shape">Изтриване (Празно поле)</string>
     <string name="save">Запазване</string>
-    <string name="cansel">Отказ</string>
+    <string name="cancel">Отказ</string>
 
     <string name="camera">Камера</string>
     <string name="confirm_clear_title">Изчисти дъската</string>
@@ -81,4 +81,26 @@
     <string name="ai_board_recognition_is_coming">Разпознаването на борда с изкуствен интелект ще бъде включено в следващата актуализация! В момента можете да задавате позиции ръчно.</string>
     <string name="no_internet_connection">Няма интернет връзка. Моля, проверете мрежата си.</string>
     <string name="retry">Опитай отново</string>
+
+    <string name="delete">ИЗТРИВАНЕ</string>
+    <string name="delete_account">Изтриване на акаунт</string>
+    <string name="delete_account_security_error">Мярка за сигурност: Моля, излезте и влезте отново, за да потвърдите самоличността си, след което опитайте да изтриете акаунта си.</string>
+    <string name="delete_account_confirmation_message">Сигурни ли сте? Всички ваши данни и прогрес в пъзелите ще бъдат изтрити завинаги. Това действие е необратимо.</string>
+    <string name="error_deleting_auth">Грешка при удостоверяването. Моля, опитайте по-късно.</string>
+    <string name="error_delete_user">Не можах да изтрия потребителските данни от базата данни.</string>
+
+    <string name="remaining_to_master">%d оставащи за овладяване</string>
+    <string name="level_completed">Ниво завършено!</string>
+
+    <string name="msg_ready">Готово</string>
+    <string name="msg_board_cleared">Дъската е изчистена.</string>
+    <string name="msg_board_updated">Дъската е обновена.</string>
+    <string name="msg_piece_moved">Фигурата е преместена.</string>
+    <string name="msg_piece_removed">Фигурата е премахната.</string>
+    <string name="msg_white_to_move">Белите са на ход</string>
+    <string name="msg_black_to_move">Черните са на ход</string>
+    <string name="msg_reset_start">Връщане към начална позиция.</string>
+    <string name="msg_illegal_position">Не може да се анализира: Неправилна позиция.</string>
+    <string name="msg_stockfish_thinking">Stockfish мисли…</string>
+
 </resources>

@@ -20,6 +20,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chessflow.jni.R
 import com.chessflow.jni.ui.ConnectivityBanner
 import com.chessflow.jni.viewModels.ProfileViewModel
+import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalContext
+import com.chessflow.jni.viewModels.AuthViewModel
 
 val totalPuzzles = mapOf(
     "easy" to 343,
@@ -31,19 +34,83 @@ val totalPuzzles = mapOf(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onAccountDeleted: () -> Unit
 ) {
+    val context = LocalContext.current
+
     val stats by viewModel.stats.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
 
     val user = viewModel.user
 
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    val userState by authViewModel.user.collectAsState()
+
+    if (userState == null) {
+        return
+    }
+
     LaunchedEffect(Unit) {
         viewModel.loadStats()
     }
 
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirmation = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.delete_account),
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.brown)
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.delete_account_confirmation_message),
+                    color = Color.DarkGray
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteConfirmation = false
+                        viewModel.deleteAccount(
+                            onSuccess = {
+                                authViewModel.logout(context)
+                                onAccountDeleted()
+                            },
+                            onError = { resId ->
+                                val message = context.getString(resId)
+                                scope.launch { snackbarHostState.showSnackbar(message) }
+                            }
+                        )
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete),
+                        color = Color.Red,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirmation = false }) {
+                    Text(stringResource(R.string.cancel), color = Color.Gray)
+                }
+            },
+            containerColor = colorResource(id = R.color.vanilla_paper),
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
@@ -101,27 +168,46 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (isLoading) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = colorResource(id = R.color.moss_dark))
-                    }
-                } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        val filteredStats = stats.toList().filter { (difficulty, _) ->
-                            totalPuzzles.containsKey(difficulty.lowercase())
+                Box(modifier = Modifier.weight(1f)) {
+                    if (isLoading) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(color = colorResource(id = R.color.moss_dark))
                         }
+                    } else {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            val filteredStats = stats.toList().filter { (difficulty, _) ->
+                                totalPuzzles.containsKey(difficulty.lowercase())
+                            }
 
-                        items(filteredStats.size) { index ->
-                            val (difficulty, count) = filteredStats[index]
-                            val total = totalPuzzles[difficulty.lowercase()] ?: 0
-                            StatRow(difficulty, count, total)
+                            items(filteredStats.size) { index ->
+                                val (difficulty, count) = filteredStats[index]
+                                val total = totalPuzzles[difficulty.lowercase()] ?: 0
+                                StatRow(difficulty, count, total)
+                            }
+
+                            item { Spacer(modifier = Modifier.height(16.dp)) }
                         }
-
-                        item { Spacer(modifier = Modifier.height(16.dp)) }
                     }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                TextButton(
+                    onClick = { showDeleteConfirmation = true },
+                    modifier = Modifier.padding(bottom = 8.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete_account),
+                        color = Color.Red.copy(alpha = 0.6f),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         }
@@ -161,13 +247,18 @@ fun StatRow(difficulty: String, solvedCount: Int, totalCount: Int) {
                 )
                 if (remaining > 0) {
                     Text(
-                        text = "$remaining remaining to master",
+                        stringResource(
+                            R.string.remaining_to_master,
+                            remaining
+                        ),
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
                 } else {
                     Text(
-                        text = "Level Completed! 🎉",
+                        stringResource(
+                            R.string.level_completed
+                        ),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = colorResource(id = R.color.moss_dark)

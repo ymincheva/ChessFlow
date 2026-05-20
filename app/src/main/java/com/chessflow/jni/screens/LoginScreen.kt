@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -31,9 +35,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 
 @Composable
-fun LoginScreen(authViewModel: AuthViewModel = hiltViewModel()) {
+fun LoginScreen(
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onLoginSuccess: () -> Unit
+) {
     val context = LocalContext.current
     val olive = colorResource(id = R.color.olive)
+
+    val user by authViewModel.user.collectAsState()
+
+    var isAuthLoading by remember { mutableStateOf(false) }
+
+    LaunchedEffect(user) {
+        if (user != null) {
+            isAuthLoading = false
+            onLoginSuccess()
+        }
+    }
 
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestIdToken(context.getString(R.string.default_web_client_id))
@@ -50,9 +68,12 @@ fun LoginScreen(authViewModel: AuthViewModel = hiltViewModel()) {
             val account = task.getResult(ApiException::class.java)
             account?.idToken?.let { token ->
                 authViewModel.signInWithGoogle(token)
+            } ?: run {
+                isAuthLoading = false
             }
         } catch (e: ApiException) {
-            Log.e("Auth", "Грешка при Google Sign-In: ${e.statusCode}")
+            Log.e("Auth", "Error Google Sign-In: ${e.statusCode}")
+            isAuthLoading = false
         }
     }
 
@@ -101,21 +122,32 @@ fun LoginScreen(authViewModel: AuthViewModel = hiltViewModel()) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Button(
-                onClick = { launcher.launch(googleSignInClient.signInIntent) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = olive),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.sign_in_with_google),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium
+            if (isAuthLoading) {
+                CircularProgressIndicator(
+                    color = olive,
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
+            } else {
+                Button(
+                    onClick = {
+                        isAuthLoading = true
+                        launcher.launch(googleSignInClient.signInIntent)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = olive),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.sign_in_with_google),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
+
             Spacer(modifier = Modifier.height(32.dp))
         }
     }

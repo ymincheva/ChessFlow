@@ -2,7 +2,6 @@ package com.chessflow.jni.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -34,15 +33,16 @@ import com.chessflow.jni.ui.AnswerCard
 import com.chessflow.jni.ui.ChessBoardUI
 import com.chessflow.jni.ui.ConnectivityBanner
 import com.chessflow.jni.ui.SingleSideToggle
+import com.chessflow.jni.utils.UiText
 import com.chessflow.jni.utils.formatDate
 import com.chessflow.jni.utils.translateDifficulty
 import com.chessflow.jni.viewModels.PuzzleViewModel
-import java.util.Locale
 
 @SuppressLint("UnusedContentLambdaTargetStateParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val nextPuzzle by viewModel.nextPuzzle.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnline.collectAsStateWithLifecycle()
@@ -59,8 +59,14 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
     val remainingAttempts = 3 - wrongAttempts
     val canShowAnswer = remainingAttempts <= 0
 
-    val messageResId by viewModel.message.collectAsStateWithLifecycle()
+    val rawMessageText by viewModel.message.collectAsStateWithLifecycle()
     val moveArg by viewModel.lastMoveArg.collectAsStateWithLifecycle()
+
+    val messageText = if (moveArg != null && rawMessageText is UiText.ResourceString) {
+        UiText.ResourceString((rawMessageText as UiText.ResourceString).resId, moveArg!!)
+    } else {
+        rawMessageText
+    }
 
     LaunchedEffect(lastDifficulty) {
         val idx = difficulties.indexOfFirst {
@@ -95,27 +101,23 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
         }
     ) { innerPadding ->
 
-        // Основният контейнер, който подрежда Банера и Съдържанието вертикално
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // 1. Проверка за интернет (Banner)
+            // Internet connection check
             ConnectivityBanner(isOnline = isOnline)
 
-            // 2. Основно съдържание на екрана
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 when {
-                    // Случай 1: Зареждане
                     isLoading && nextPuzzle == null -> {
                         CircularProgressIndicator(color = colorResource(R.color.moss_dark))
                     }
 
-                    // Случай 2: Грешка или липса на пъзели
                     (errorResId != null && nextPuzzle == null) -> {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,11 +130,13 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                                 modifier = Modifier.size(64.dp)
                             )
                             Spacer(Modifier.height(16.dp))
+
                             Text(
-                                text = stringResource(errorResId!!),
+                                text = errorResId!!.asString(context),
                                 textAlign = TextAlign.Center,
                                 style = MaterialTheme.typography.titleLarge
                             )
+
                             Spacer(Modifier.height(24.dp))
                             DifficultySelector(viewModel, difficulties, selectedIndex) {
                                 selectedIndex = it
@@ -140,7 +144,7 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                         }
                     }
 
-                    // Случай 3: Има зареден пъзел
+                    // Puzzel
                     nextPuzzle != null -> {
                         val bestMoveStr = nextPuzzle!!.bestMove
                         val fromIndex =
@@ -162,7 +166,7 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                                 }
                             }
 
-                            // ✅ Шахматна дъска с анимация
+                            // ✅ Chessboard
                             item {
                                 AnimatedContent(
                                     targetState = nextPuzzle?.puzzleId,
@@ -209,7 +213,6 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                                 }
                             }
 
-                            // ✅ Контроли и Информация
                             item {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Row(
@@ -223,10 +226,7 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                                     }
 
                                     Text(
-                                        text = if (moveArg != null) stringResource(
-                                            messageResId,
-                                            moveArg!!
-                                        ) else stringResource(messageResId),
+                                        text = messageText.asString(context),
                                         style = MaterialTheme.typography.bodyMedium,
                                         textAlign = TextAlign.Center,
                                         modifier = Modifier.padding(vertical = 8.dp)
@@ -239,7 +239,7 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                                         date = formatDate(nextPuzzle!!.sourceGame.Date)
                                     )
 
-                                    // Навигационни бутони
+                                    // Navigation buttons
                                     Row(
                                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                                         verticalAlignment = Alignment.CenterVertically,
@@ -281,7 +281,7 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                                 }
                             }
 
-                            // ✅ Секция с отговори
+                            // ✅ Answers section
                             if (showAnswer) {
                                 item {
                                     Column(
