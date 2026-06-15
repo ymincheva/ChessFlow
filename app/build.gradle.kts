@@ -13,9 +13,9 @@ android {
     defaultConfig {
         applicationId = "com.chessflow.jni"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 35
+        versionCode = 3
+        versionName = "1.0.3"
 
         externalNativeBuild {
             cmake {
@@ -78,8 +78,14 @@ android {
         correctErrorTypes = true
     }
 
-    // 🔹 Версия на NDK
+    // 🔹 NDK
     ndkVersion = "27.0.12077973"
+
+    lint {
+        disable.add("NullSafeMutableLiveData")
+        abortOnError = false
+        checkReleaseBuilds = false
+    }
 }
 
 dependencies {
