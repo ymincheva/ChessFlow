@@ -14,13 +14,19 @@ android {
         applicationId = "com.chessflow.jni"
         minSdk = 24
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.0.3"
+        versionCode = 7
+        versionName = "1.0.7"
 
         externalNativeBuild {
             cmake {
                 cppFlags("-std=c++17", "-DANDROID", "-D__ANDROID__", "-fexceptions", "-frtti", "-DNDEBUG")
-                arguments("-DANDROID_STL=c++_shared", "-DANDROID_ARM_NEON=TRUE", "-DCMAKE_BUILD_TYPE=Release")
+
+                arguments(
+                    "-DANDROID_STL=c++_shared",
+                    "-DANDROID_ARM_NEON=TRUE",
+                    "-DCMAKE_BUILD_TYPE=Release",
+                    "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,max-page-size=16384"
+                )
             }
         }
 
