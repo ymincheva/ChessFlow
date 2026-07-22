@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "com.chessflow.jni"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.chessflow.jni"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 7
-        versionName = "1.0.7"
+        targetSdk = 36
+        versionCode = 8
+        versionName = "1.0.8"
 
         externalNativeBuild {
             cmake {
@@ -140,6 +140,9 @@ dependencies {
 
     implementation(libs.androidx.window)
     implementation(libs.androidx.window.core)
+
+    implementation(libs.google.android.play.app.update)
+    implementation(libs.google.android.play.app.update.ktx)
 
     // Testing
     testImplementation(libs.junit)
