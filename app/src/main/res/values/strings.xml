@@ -102,4 +102,16 @@
     <string name="msg_illegal_position">Cannot analyze: Illegal position.</string>
     <string name="msg_stockfish_thinking">Stockfish is thinking…</string>
 
+    <string name="puzzle_goal_prefix">"Find the "</string>
+    <string name="puzzle_goal_best_move">BEST MOVE</string>
+    <string name="puzzle_goal_for_white">" for White!"</string>
+    <string name="puzzle_goal_for_black">" for Black!"</string>
+
+    <string name="dialog_search_title">Search by Player</string>
+    <string name="dialog_search_instruction">Enter Grandmaster name (e.g. Kasparov, Carlsen, Fischer):</string>
+    <string name="dialog_search_placeholder">Player name…</string>
+    <string name="dialog_search_button_confirm">Search</string>
+    <string name="dialog_search_button_clear">Clear</string>
+
+    <string name="no_puzzles_found_for_player">No puzzles found for this chess player.</string>
 </resources>

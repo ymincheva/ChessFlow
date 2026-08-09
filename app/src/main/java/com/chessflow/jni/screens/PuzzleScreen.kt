@@ -2,10 +2,12 @@ package com.chessflow.jni.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,9 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chessflow.jni.R
@@ -33,6 +40,7 @@ import com.chessflow.jni.ui.AnswerCard
 import com.chessflow.jni.ui.ChessBoardUI
 import com.chessflow.jni.ui.ConnectivityBanner
 import com.chessflow.jni.ui.SingleSideToggle
+import com.chessflow.jni.utils.KeepScreenOn
 import com.chessflow.jni.utils.UiText
 import com.chessflow.jni.utils.formatDate
 import com.chessflow.jni.utils.translateDifficulty
@@ -42,6 +50,7 @@ import com.chessflow.jni.viewModels.PuzzleViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
+    KeepScreenOn()
     val context = androidx.compose.ui.platform.LocalContext.current
     val nextPuzzle by viewModel.nextPuzzle.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
@@ -61,6 +70,9 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
 
     val rawMessageText by viewModel.message.collectAsStateWithLifecycle()
     val moveArg by viewModel.lastMoveArg.collectAsStateWithLifecycle()
+
+    var showSearchDialog by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
 
     val messageText = if (moveArg != null && rawMessageText is UiText.ResourceString) {
         UiText.ResourceString((rawMessageText as UiText.ResourceString).resId, moveArg!!)
@@ -101,12 +113,82 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
         }
     ) { innerPadding ->
 
+        if (showSearchDialog) {
+            AlertDialog(
+                onDismissRequest = { showSearchDialog = false },
+                title = {
+                    Text(
+                        text = stringResource(R.string.dialog_search_title),
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(R.color.brown)
+                    )
+                },
+                text = {
+                    Column {
+                        Text(
+                            text = stringResource(R.string.dialog_search_instruction),
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            singleLine = true,
+                            placeholder = {
+                                Text(stringResource(R.string.dialog_search_placeholder))
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = colorResource(R.color.moss_dark),
+                                unfocusedBorderColor = colorResource(R.color.brown)
+                            )
+                        )
+                    }
+                },
+                confirmButton = {
+                    OutlinedButton(
+                        onClick = {
+                            showSearchDialog = false
+                            viewModel.searchPuzzlesByPlayer(searchQuery)
+                        },
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = colorResource(R.color.moss_dark)
+                        ),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = colorResource(R.color.moss_dark)
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(R.string.dialog_search_button_confirm),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            searchQuery = ""
+                            showSearchDialog = false
+                            viewModel.clearPlayerFilter()
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.dialog_search_button_clear),
+                            color = colorResource(R.color.brown)
+                        )
+                    }
+                },
+                containerColor = colorResource(R.color.vanilla_paper),
+                shape = RoundedCornerShape(16.dp)
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Internet connection check
             ConnectivityBanner(isOnline = isOnline)
 
             Box(
@@ -138,12 +220,15 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                             )
 
                             Spacer(Modifier.height(24.dp))
-                            DifficultySelector(viewModel, difficulties, selectedIndex) {
-                                selectedIndex = it
-                            }
+                            PuzzleFiltersRow(
+                                viewModel = viewModel,
+                                difficulties = difficulties,
+                                selectedIndex = selectedIndex,
+                                onIndexChange = { selectedIndex = it },
+                                onSearchClick = { showSearchDialog = true }
+                            )
                         }
                     }
-
                     // Puzzel
                     nextPuzzle != null -> {
                         val bestMoveStr = nextPuzzle!!.bestMove
@@ -152,6 +237,8 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                         val toIndex =
                             com.chessflow.jni.utils.squareToIndex(bestMoveStr.substring(2, 4))
                         val correctMove = Move(fromIndex, toIndex)
+                        val isWhiteToMove =
+                            nextPuzzle!!.sideToMove.equals("white", ignoreCase = true)
 
                         LazyColumn(
                             modifier = Modifier
@@ -161,12 +248,19 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             item {
-                                DifficultySelector(viewModel, difficulties, selectedIndex) {
-                                    selectedIndex = it
-                                }
+                                PuzzleGoalBanner(isWhiteToMove = isWhiteToMove)
                             }
 
-                            // ✅ Chessboard
+                            item {
+                                PuzzleFiltersRow(
+                                    viewModel = viewModel,
+                                    difficulties = difficulties,
+                                    selectedIndex = selectedIndex,
+                                    onIndexChange = { selectedIndex = it },
+                                    onSearchClick = { showSearchDialog = true }
+                                )
+                            }
+
                             item {
                                 AnimatedContent(
                                     targetState = nextPuzzle?.puzzleId,
@@ -220,7 +314,7 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
                                         horizontalArrangement = Arrangement.End
                                     ) {
                                         SingleSideToggle(
-                                            currentSide = if (nextPuzzle!!.sideToMove == "white") "w" else "b",
+                                            currentSide = if (isWhiteToMove) "w" else "b",
                                             onSideChange = {}
                                         )
                                     }
@@ -314,18 +408,19 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun DifficultySelector(
+fun PuzzleFiltersRow(
     viewModel: PuzzleViewModel,
     difficulties: List<String>,
     selectedIndex: Int,
-    onIndexChange: (Int) -> Unit
+    onIndexChange: (Int) -> Unit,
+    onSearchClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -334,7 +429,8 @@ fun DifficultySelector(
             fontWeight = FontWeight.Bold,
             color = colorResource(R.color.brown)
         )
-        Spacer(Modifier.width(10.dp))
+        Spacer(Modifier.width(8.dp))
+
         Box {
             Surface(
                 shape = RoundedCornerShape(8.dp),
@@ -342,11 +438,11 @@ fun DifficultySelector(
                 modifier = Modifier
                     .clickable { expanded = true }
                     .height(44.dp)
-                    .widthIn(min = 140.dp),
+                    .widthIn(min = 130.dp),
                 shadowElevation = 2.dp
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 12.dp),
+                    modifier = Modifier.padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -369,6 +465,97 @@ fun DifficultySelector(
                     )
                 }
             }
+        }
+
+        Spacer(Modifier.width(8.dp))
+
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            color = Color.Transparent,
+            shadowElevation = 0.dp,
+            modifier = Modifier
+                .size(44.dp)
+                .clickable { onSearchClick() }
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search Player",
+                    tint = colorResource(R.color.moss_dark)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PuzzleGoalBanner(isWhiteToMove: Boolean) {
+    val backgroundColor = if (isWhiteToMove) {
+        colorResource(R.color.vanilla_paper)
+    } else {
+        colorResource(R.color.graphite)
+    }
+
+    val textColor = if (isWhiteToMove) {
+        colorResource(R.color.graphite)
+    } else {
+        Color.White
+    }
+
+    val highlightColor = if (isWhiteToMove) {
+        colorResource(R.color.moss_dark)
+    } else {
+        colorResource(R.color.vanilla_paper)
+    }
+
+    Card(
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(12.dp)
+                    .background(
+                        color = highlightColor,
+                        shape = CircleShape
+                    )
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Text(
+                text = buildAnnotatedString {
+                    append(stringResource(R.string.puzzle_goal_prefix))
+
+                    withStyle(
+                        style = SpanStyle(
+                            color = highlightColor,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    ) {
+                        append(stringResource(R.string.puzzle_goal_best_move))
+                    }
+
+                    append(
+                        if (isWhiteToMove) {
+                            stringResource(R.string.puzzle_goal_for_white)
+                        } else {
+                            stringResource(R.string.puzzle_goal_for_black)
+                        }
+                    )
+                },
+                color = textColor,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }

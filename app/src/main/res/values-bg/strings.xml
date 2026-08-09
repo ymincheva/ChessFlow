@@ -103,4 +103,17 @@
     <string name="msg_illegal_position">Не може да се анализира: Неправилна позиция.</string>
     <string name="msg_stockfish_thinking">Stockfish мисли…</string>
 
+    <string name="puzzle_goal_prefix">"Намери "</string>
+    <string name="puzzle_goal_best_move">НАЙ-ДОБЪР</string>
+    <string name="puzzle_goal_for_white">" за белите!"</string>
+    <string name="puzzle_goal_for_black">" за черните!"</string>
+
+    <string name="dialog_search_title">Търсене на играч</string>
+    <string name="dialog_search_instruction">Въведи име на играч ( Kasparov, Carlsen, Fischer):</string>
+    <string name="dialog_search_placeholder">Име на играч…</string>
+    <string name="dialog_search_button_confirm">Търси</string>
+    <string name="dialog_search_button_clear">Изчисти</string>
+
+    <string name="no_puzzles_found_for_player">Няма намерени пъзели за този шахматист.</string>
+
 </resources>

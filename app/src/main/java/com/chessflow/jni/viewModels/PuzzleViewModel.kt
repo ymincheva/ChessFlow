@@ -73,17 +73,30 @@ class PuzzleViewModel @Inject constructor(
         initialValue = true
     )
 
+    // --- Search / Filter State ---
+    private val _activePlayerQuery = MutableStateFlow<String?>(null)
+    val activePlayerQuery = _activePlayerQuery.asStateFlow()
+
     fun loadCurrentPuzzles() {
         viewModelScope.launch {
-            _isLoading.value = true
-            _error.value = null
-            val userId = auth.currentUser?.uid ?: return@launch
+            val lastDiff = prefs.lastDifficulty.firstOrNull() ?: "easy"
+            currentDifficulty = lastDiff
+            fetchAndFilterPuzzles()
+        }
+        /*     viewModelScope.launch {
+                 _isLoading.value = true
+                 _error.value = null
+                 val userId = auth.currentUser?.uid ?: return@launch
 
-            try {
-                val lastDiff = prefs.lastDifficulty.firstOrNull() ?: "easy"
-                currentDifficulty = lastDiff
+                 try {
+                     val lastDiff = prefs.lastDifficulty.firstOrNull() ?: "easy"
+                     currentDifficulty = lastDiff
 
-                unsolvedPuzzles = repository.loadUnsolvedPuzzles(userId, currentDifficulty)
+                     allPuzzles = repository.loadUnsolvedPuzzles(userId, currentDifficulty)
+
+                     applyPlayerFilter()
+
+                    *//* unsolvedPuzzles = repository.loadUnsolvedPuzzles(userId, currentDifficulty)
 
                 if (unsolvedPuzzles.isNotEmpty()) {
                     currentIndex = 0
@@ -91,20 +104,21 @@ class PuzzleViewModel @Inject constructor(
                 } else {
                     _nextPuzzle.value = null
                     _error.value = UiText.ResourceString(R.string.puzzles_solved)
-                }
+                }*//*
             } catch (e: Exception) {
                 _error.value = UiText.ResourceString(R.string.error_loading)
 
             } finally {
                 _isLoading.value = false
             }
-        }
+        }*/
     }
 
     fun onDifficultyChanged(newDifficulty: String) {
         viewModelScope.launch {
             currentDifficulty = newDifficulty
             prefs.saveDifficulty(newDifficulty)
+            _activePlayerQuery.value = null
             loadCurrentPuzzles()
         }
     }
@@ -247,4 +261,73 @@ class PuzzleViewModel @Inject constructor(
         }
         _selectedSquare.value = null
     }
+
+    /**
+     * Search for puzzles by chess player's name (White or Black player).
+     */
+    fun searchPuzzlesByPlayer(query: String) {
+        val trimmedQuery = query.trim()
+        if (trimmedQuery.isEmpty()) {
+            clearPlayerFilter()
+            return
+        }
+
+        _activePlayerQuery.value = trimmedQuery
+        fetchAndFilterPuzzles()
+    }
+
+    /**
+     * Removes the player filter and restores all puzzles..
+     */
+    fun clearPlayerFilter() {
+        _activePlayerQuery.value = null
+        fetchAndFilterPuzzles()
+    }
+
+    /**
+     * Filters unsolved puzzles by the specified player's name
+     */
+    private fun fetchAndFilterPuzzles() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+            val userId = auth.currentUser?.uid ?: run {
+                _isLoading.value = false
+                return@launch
+            }
+
+            try {
+                val freshUnsolved = repository.loadUnsolvedPuzzles(userId, currentDifficulty)
+
+                val query = _activePlayerQuery.value
+
+                unsolvedPuzzles = if (!query.isNullOrBlank()) {
+                    freshUnsolved.filter { puzzle ->
+                        puzzle.sourceGame.White.contains(query, ignoreCase = true) ||
+                                puzzle.sourceGame.Black.contains(query, ignoreCase = true)
+                    }
+                } else {
+                    freshUnsolved
+                }
+
+
+                if (unsolvedPuzzles.isNotEmpty()) {
+                    currentIndex = 0
+                    updateUIWithCurrentPuzzle()
+                } else {
+                    _nextPuzzle.value = null
+                    if (freshUnsolved.isEmpty()) {
+                        _error.value = UiText.ResourceString(R.string.puzzles_solved)
+                    } else {
+                       _error.value = UiText.ResourceString(R.string.no_puzzles_found_for_player)
+                    }
+                }
+            } catch (e: Exception) {
+                _error.value = UiText.ResourceString(R.string.error_loading)
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
 }

@@ -103,4 +103,16 @@
     <string name="msg_illegal_position">Analyse fehlgeschlagen: Ungültige Position.</string>
     <string name="msg_stockfish_thinking">Stockfisch denkt…</string>
 
+    <string name="puzzle_goal_prefix">"Finde den "</string>
+    <string name="puzzle_goal_best_move">BESTEN ZUG</string>
+    <string name="puzzle_goal_for_white">" für Weiß!"</string>
+    <string name="puzzle_goal_for_black">" für Schwarz!"</string>
+
+    <string name="dialog_search_title">Nach Spieler suchen</string>
+    <string name="dialog_search_instruction">Großmeister-Namen eingeben (z. B. Kasparow, Carlsen, Fischer):</string>
+    <string name="dialog_search_placeholder">Spielername…</string>
+    <string name="dialog_search_button_confirm">Suchen</string>
+    <string name="dialog_search_button_clear">Löschen</string>
+
+    <string name="no_puzzles_found_for_player">Keine Rätsel für diesen Schachspieler gefunden.</string>
 </resources>
