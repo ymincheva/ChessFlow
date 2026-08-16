@@ -114,4 +114,18 @@
     <string name="dialog_search_button_clear">Clear</string>
 
     <string name="no_puzzles_found_for_player">No puzzles found for this chess player.</string>
+
+    <string name="version_format">v%1$s (%2$d)</string>
+    <string name="error_no_browser">Unable to open web browser</string>
+    <string name="version_copied">Version copied to clipboard: %1$s</string>
+    <string name="app_version_label">App Version</string>
+
+    <string name="welcome_user">Hello, %1$s!</string>
+
+    <string name="default_user_name">Chess Player</string>
+    <string name="solved_progress_format">Solved: %1$d / %2$d (%3$d%%)</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="difficulty_very_hard">Very Hard</string>
 </resources>

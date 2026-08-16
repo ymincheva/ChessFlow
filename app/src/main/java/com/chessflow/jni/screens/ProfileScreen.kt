@@ -5,11 +5,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,10 +22,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chessflow.jni.R
 import com.chessflow.jni.ui.ConnectivityBanner
+import com.chessflow.jni.viewModels.AuthViewModel
 import com.chessflow.jni.viewModels.ProfileViewModel
 import kotlinx.coroutines.launch
-import androidx.compose.ui.platform.LocalContext
-import com.chessflow.jni.viewModels.AuthViewModel
 
 val totalPuzzles = mapOf(
     "easy" to 343,
@@ -104,7 +106,7 @@ fun ProfileScreen(
                     Text(stringResource(R.string.cancel), color = Color.Gray)
                 }
             },
-            containerColor = colorResource(id = R.color.vanilla_paper),
+            containerColor = colorResource(id = R.color.champagne),
             shape = RoundedCornerShape(16.dp)
         )
     }
@@ -138,35 +140,39 @@ fun ProfileScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // User Avatar Header
+                val displayName = user?.displayName ?: stringResource(R.string.default_user_name)
+
                 Text(
-                    text = user?.displayName ?: "Chess Player",
-                    style = MaterialTheme.typography.headlineMedium,
+                    text = displayName,
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.brown)
                 )
 
-                user?.email?.let {
+                user?.email?.let { email ->
                     Text(
-                        text = it,
+                        text = email,
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray
                     )
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
+                // Progress Section Header
                 Text(
                     text = stringResource(R.string.masterclass_progress),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
                     color = colorResource(id = R.color.brown)
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
 
                 Box(modifier = Modifier.weight(1f)) {
                     if (isLoading) {
@@ -191,7 +197,7 @@ fun ProfileScreen(
                                 StatRow(difficulty, count, total)
                             }
 
-                            item { Spacer(modifier = Modifier.height(16.dp)) }
+                            item { Spacer(modifier = Modifier.height(8.dp)) }
                         }
                     }
                 }
@@ -204,7 +210,7 @@ fun ProfileScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.delete_account),
-                        color = Color.Red.copy(alpha = 0.6f),
+                        color = Color.Red.copy(alpha = 0.7f),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -215,63 +221,98 @@ fun ProfileScreen(
 }
 
 @Composable
-fun StatRow(difficulty: String, solvedCount: Int, totalCount: Int) {
+fun StatRow(difficultyKey: String, solvedCount: Int, totalCount: Int) {
     val remaining = (totalCount - solvedCount).coerceAtLeast(0)
+    val progress =
+        if (totalCount > 0) (solvedCount.toFloat() / totalCount.toFloat()).coerceIn(0f, 1f) else 0f
+    val progressPercent = (progress * 100).toInt()
+
+    val difficultyTitle = when (difficultyKey.lowercase()) {
+        "easy" -> stringResource(R.string.difficulty_easy)
+        "medium" -> stringResource(R.string.difficulty_medium)
+        "hard" -> stringResource(R.string.difficulty_hard)
+        "very_hard" -> stringResource(R.string.difficulty_very_hard)
+        else -> difficultyKey.replace("_", " ").uppercase()
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.vanilla_paper)
+            containerColor = colorResource(id = R.color.champagne)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
         ) {
-            Column {
-                Text(
-                    text = difficulty.replace("_", " ").uppercase(),
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 14.sp,
-                    color = colorResource(id = R.color.brown)
-                )
-                Text(
-                    text = "Solved: $solvedCount / $totalCount",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                if (remaining > 0) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        stringResource(
-                            R.string.remaining_to_master,
-                            remaining
-                        ),
-                        fontSize = 12.sp,
-                        color = Color.Gray
-                    )
-                } else {
-                    Text(
-                        stringResource(
-                            R.string.level_completed
-                        ),
-                        fontSize = 12.sp,
+                        text = difficultyTitle,
                         fontWeight = FontWeight.Bold,
-                        color = colorResource(id = R.color.moss_dark)
+                        fontSize = 16.sp,
+                        color = colorResource(id = R.color.brown)
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Text(
+                        text = stringResource(
+                            R.string.solved_progress_format,
+                            solvedCount,
+                            totalCount,
+                            progressPercent
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = colorResource(id = R.color.brown).copy(alpha = 0.8f)
                     )
                 }
+
+                Icon(
+                    imageVector = if (remaining == 0) Icons.Default.EmojiEvents else Icons.Default.CheckCircle,
+                    contentDescription = null,
+                    tint = if (remaining == 0) Color(0xFFFFD700) else colorResource(id = R.color.moss_dark),
+                    modifier = Modifier.size(28.dp)
+                )
             }
 
-            Icon(
-                imageVector = Icons.Default.CheckCircle,
-                contentDescription = null,
-                tint = if (remaining == 0) Color(0xFFFFD700) else colorResource(id = R.color.moss_dark),
-                modifier = Modifier.size(28.dp)
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Progress Bar
+            LinearProgressIndicator(
+                progress = { progress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = colorResource(id = R.color.moss_dark),
+                trackColor = colorResource(id = R.color.moss_dark).copy(alpha = 0.15f)
             )
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            if (remaining > 0) {
+                Text(
+                    text = stringResource(R.string.remaining_to_master, remaining),
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.level_completed),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.moss_dark)
+                )
+            }
         }
     }
 }

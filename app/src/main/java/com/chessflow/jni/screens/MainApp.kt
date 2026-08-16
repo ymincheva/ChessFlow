@@ -24,6 +24,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.chessflow.jni.R
 import com.chessflow.jni.utils.changeLanguage
 import com.chessflow.jni.viewModels.AuthViewModel
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Psychology
+import androidx.compose.ui.draw.clip
 
 @Composable
 fun MainApp(authViewModel: AuthViewModel = hiltViewModel()) {
@@ -73,14 +89,14 @@ fun MainApp(authViewModel: AuthViewModel = hiltViewModel()) {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController, authViewModel: AuthViewModel) {
-    val olive = colorResource(id = R.color.olive)
     val mossDark = colorResource(id = R.color.moss_dark)
+    val olive = colorResource(id = R.color.olive)
     var showLanguageMenu by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val user by authViewModel.user.collectAsState()
 
     Scaffold(
         topBar = {
@@ -91,7 +107,7 @@ fun HomeScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                         Icon(
                             imageVector = Icons.Default.Language,
                             contentDescription = "Change Language",
-                            tint = androidx.compose.ui.graphics.Color.White
+                            tint = Color.White
                         )
                     }
 
@@ -100,39 +116,21 @@ fun HomeScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                         onDismissRequest = { showLanguageMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = {
-                                Text(
-                                    stringResource(
-                                        R.string.english
-                                    )
-                                )
-                            },
+                            text = { Text(stringResource(R.string.english)) },
                             onClick = {
                                 changeLanguage("en")
                                 showLanguageMenu = false
                             }
                         )
                         DropdownMenuItem(
-                            text = {
-                                Text(
-                                    stringResource(
-                                        R.string.german
-                                    )
-                                )
-                            },
+                            text = { Text(stringResource(R.string.german)) },
                             onClick = {
                                 changeLanguage("de")
                                 showLanguageMenu = false
                             }
                         )
                         DropdownMenuItem(
-                            text = {
-                                Text(
-                                    stringResource(
-                                        R.string.bulgarian
-                                    )
-                                )
-                            },
+                            text = { Text(stringResource(R.string.bulgarian)) },
                             onClick = {
                                 changeLanguage("bg")
                                 showLanguageMenu = false
@@ -144,7 +142,7 @@ fun HomeScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                             contentDescription = "Logout",
-                            tint = androidx.compose.ui.graphics.Color.White
+                            tint = Color.White
                         )
                     }
                 },
@@ -155,53 +153,158 @@ fun HomeScreen(navController: NavHostController, authViewModel: AuthViewModel) {
             )
         }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
-                onClick = { navController.navigate("puzzles") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = olive)
+            // ♟️ Background Subtle Chessboard Pattern
+            ChessboardBackgroundPattern(
+                color = mossDark.copy(alpha = 0.04f)
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(stringResource(R.string.puzzles))
+                // User Welcome Header (Optional)
+                user?.displayName?.let { name ->
+                    Text(
+                        text = stringResource(R.string.welcome_user, name),
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            color = mossDark
+                        ),
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+
+                // Feature Action Cards
+                HomeNavigationCard(
+                    title = stringResource(R.string.puzzles),
+                    icon = Icons.Default.Psychology,
+                    onClick = { navController.navigate("puzzles") }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                HomeNavigationCard(
+                    title = stringResource(R.string.analyze),
+                    icon = Icons.Default.Analytics,
+                    onClick = { navController.navigate("analyze") }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                HomeNavigationCard(
+                    title = stringResource(R.string.profile),
+                    icon = Icons.Default.Person,
+                    onClick = { navController.navigate("profile") }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                HomeNavigationCard(
+                    title = stringResource(R.string.about),
+                    icon = Icons.Default.Info,
+                    onClick = { navController.navigate("about") }
+                )
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { navController.navigate("analyze") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = olive)
-            ) {
-                Text(stringResource(R.string.analyze))
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { navController.navigate("profile") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = olive)
-            ) {
-                Text(stringResource(R.string.profile))
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { navController.navigate("about") },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = olive)
-            ) {
-                Text(stringResource(R.string.about))
-            }
-
-
         }
     }
 }
+
+// ♟️ Canvas Drawing Component for Watermark Chessboard
+@Composable
+fun ChessboardBackgroundPattern(color: Color) {
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val columns = 8
+        val rows = 12
+        val squareWidth = size.width / columns
+        val squareHeight = size.height / rows
+
+        for (row in 0 until rows) {
+            for (col in 0 until columns) {
+                if ((row + col) % 2 == 1) {
+                    drawRect(
+                        color = color,
+                        topLeft = Offset(col * squareWidth, row * squareHeight),
+                        size = Size(squareWidth, squareHeight)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeNavigationCard(
+    title: String,
+    icon: ImageVector,
+    onClick: () -> Unit
+) {
+    val champagne = colorResource(id = R.color.champagne)
+    val brown = colorResource(id = R.color.brown)
+    val mossDark = colorResource(id = R.color.moss_dark)
+
+    Card(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(72.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = champagne),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clip(CircleShape)
+                        .background(mossDark),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 17.sp,
+                        color = brown
+                    )
+                )
+            }
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = brown.copy(alpha = 0.6f),
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
