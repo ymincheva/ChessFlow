@@ -75,7 +75,6 @@ class PuzzleViewModel @Inject constructor(
 
     // --- Search / Filter State ---
     private val _activePlayerQuery = MutableStateFlow<String?>(null)
-    val activePlayerQuery = _activePlayerQuery.asStateFlow()
 
     fun loadCurrentPuzzles() {
         viewModelScope.launch {
@@ -83,35 +82,6 @@ class PuzzleViewModel @Inject constructor(
             currentDifficulty = lastDiff
             fetchAndFilterPuzzles()
         }
-        /*     viewModelScope.launch {
-                 _isLoading.value = true
-                 _error.value = null
-                 val userId = auth.currentUser?.uid ?: return@launch
-
-                 try {
-                     val lastDiff = prefs.lastDifficulty.firstOrNull() ?: "easy"
-                     currentDifficulty = lastDiff
-
-                     allPuzzles = repository.loadUnsolvedPuzzles(userId, currentDifficulty)
-
-                     applyPlayerFilter()
-
-                    *//* unsolvedPuzzles = repository.loadUnsolvedPuzzles(userId, currentDifficulty)
-
-                if (unsolvedPuzzles.isNotEmpty()) {
-                    currentIndex = 0
-                    updateUIWithCurrentPuzzle()
-                } else {
-                    _nextPuzzle.value = null
-                    _error.value = UiText.ResourceString(R.string.puzzles_solved)
-                }*//*
-            } catch (e: Exception) {
-                _error.value = UiText.ResourceString(R.string.error_loading)
-
-            } finally {
-                _isLoading.value = false
-            }
-        }*/
     }
 
     fun onDifficultyChanged(newDifficulty: String) {

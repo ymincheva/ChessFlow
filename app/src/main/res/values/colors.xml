@@ -21,9 +21,11 @@
     <color name="vanilla_paper">#FFFFFDF8</color>
     <color name="moss_dark">#FF525333</color>
     <color name="moss_dark_light">#FF80936A</color>
+    <color name="moss_sage">#7E8055</color>
     <color name="orange_persian">#FFCF8852</color>
     <color name="chess_light">#F0D9B5</color>
     <color name="chess_dark">#B58863</color>
     <color name="red_brownish">#FF8B2E2E</color>
     <color name="red_burgundy">#FF7A1F1F</color>
+    <color name="bmac_yellow">#FFF4D068</color>
 </resources>

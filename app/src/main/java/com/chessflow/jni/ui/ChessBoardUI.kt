@@ -28,17 +28,17 @@ import kotlin.math.roundToInt
 @Composable
 fun ChessBoardUI(
     board: Board,
-    correctMove: Move?,
-    selectedSquare: Pair<Int, Int>?,
-    showAnswer: Boolean,
+    squareSize: Dp,
+    correctMove: Move? = null,
+    selectedSquare: Pair<Int, Int>? = null,
+    showAnswer: Boolean = false,
     isFlipped: Boolean = false,
-    isEditable: Boolean = true,
+    isEditable: Boolean = false,
     isEraserMode: Boolean = false,
-    onDeletePiece: (Int, Int) -> Unit,
-    onSquareClick: (Int, Int) -> Unit,
-    onMoveAttempt: (from: Pair<Int, Int>, to: Pair<Int, Int>) -> Unit,
-    squareSize: Dp
-) {
+    onDeletePiece: (Int, Int) -> Unit = { _, _ -> },
+    onSquareClick: (Int, Int) -> Unit = { _, _ -> },
+    onMoveAttempt: (from: Pair<Int, Int>, to: Pair<Int, Int>) -> Unit = { _, _ -> }
+){
     val files = if (isFlipped) listOf("h", "g", "f", "e", "d", "c", "b", "a")
     else listOf("a", "b", "c", "d", "e", "f", "g", "h")
 

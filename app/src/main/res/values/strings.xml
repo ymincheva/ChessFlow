@@ -4,7 +4,8 @@
     <string name="welcome_text">Learn from the legends! Solve unique Masterclass Puzzles generated from historical games and sharpen your tactics. Elevate your ELO with ChessFlow today!</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="puzzles">Puzzles</string>
-    <string name="analyze">Analyze</string>
+    <string name="analyze">Analyze Position</string>
+    <string name="get_best_move">Get Best Move</string>
     <string name="profile">Profile</string>
     <string name="about">About</string>
     <string name="select_difficulty">Select Difficulty :</string>
@@ -128,4 +129,41 @@
     <string name="difficulty_medium">Medium</string>
     <string name="difficulty_hard">Hard</string>
     <string name="difficulty_very_hard">Very Hard</string>
+
+    <string name="buy_me_a_coffee">☕ Support the project (Buy Me a Coffee)</string>
+
+    <string name="error_invalid_fen">Invalid FEN format!</string>
+    <string name="error_parsing_fen">Error parsing FEN string!</string>
+    <string name="msg_position_loaded">Position loaded successfully</string>
+
+    <string name="fen_position_label">FEN Position</string>
+    <string name="paste_fen_description">Paste FEN</string>
+    <string name="btn_load">Load</string>
+
+    <string name="clear_text_description">Clear FEN</string>
+
+    <string name="pgn_input_label">PGN Game / Moves</string>
+    <string name="paste_pgn_description">Paste PGN</string>
+    <string name="btn_load_pgn">Load PGN</string>
+    <string name="first_move">First Move</string>
+    <string name="previous_move">Previous Move</string>
+    <string name="next_move">Next Move</string>
+    <string name="last_move">Last Move</string>
+
+    <string name="msg_castling_updated">Castling rights updated</string>
+    <string name="msg_analysis_stopped">Analysis stopped</string>
+    <string name="msg_en_passant_updated">En passant target updated</string>
+    <string name="msg_pgn_loaded">PGN loaded successfully</string>
+    <string name="error_parsing_pgn">Error parsing PGN</string>
+
+    <string name="check_move_quality">Check Move Quality</string>
+    <string name="quality_best">Perfect Move</string>
+    <string name="quality_good">Solid Move</string>
+    <string name="quality_inaccuracy">Inaccuracy</string>
+    <string name="quality_mistake">Mistake</string>
+    <string name="quality_blunder">Blunder</string>
+    <string name="move_quality_label">Move Quality: %1$s</string>
+
+    <string name="error_invalid_pgn_format">Invalid PGN format! Please check the entered text.</string>
+    <string name="error_invalid_fen_format">Invalid FEN position! Please check the notation.</string>
 </resources>

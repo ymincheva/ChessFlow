@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.MilitaryTech
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.ui.draw.clip
 
@@ -75,7 +77,8 @@ fun MainApp(authViewModel: AuthViewModel = hiltViewModel()) {
             HomeScreen(navController, authViewModel)
         }
         composable("puzzles") { PuzzleScreen() }
-        composable("analyze") { AnalyzeScreen() }
+        composable("get_best_move_eval") { AnalyzeScreen() }
+        composable("analyze") { AnalyzePositionScreen()}
         composable("profile") {
             ProfileScreen(
                 onAccountDeleted = {
@@ -187,6 +190,14 @@ fun HomeScreen(navController: NavHostController, authViewModel: AuthViewModel) {
                     title = stringResource(R.string.puzzles),
                     icon = Icons.Default.Psychology,
                     onClick = { navController.navigate("puzzles") }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                HomeNavigationCard(
+                    title = stringResource(R.string.get_best_move),
+                    icon = Icons.Default.Psychology,
+                    onClick = { navController.navigate("get_best_move_eval") }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

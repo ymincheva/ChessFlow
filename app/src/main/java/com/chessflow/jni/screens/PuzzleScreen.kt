@@ -60,7 +60,7 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
     val showAnswer by viewModel.showAnswer.collectAsStateWithLifecycle()
 
     val difficulties = listOf("Easy", "Medium", "Hard", "Very Hard")
-    var selectedIndex by remember { mutableStateOf(2) }
+    var selectedIndex by remember { mutableStateOf(0) }
     val lastDifficulty by viewModel.prefs.lastDifficulty.collectAsStateWithLifecycle(initialValue = "medium")
     val errorResId by viewModel.error.collectAsStateWithLifecycle()
 
@@ -75,7 +75,12 @@ fun PuzzleScreen(viewModel: PuzzleViewModel = hiltViewModel()) {
     var searchQuery by remember { mutableStateOf("") }
 
     val messageText = if (moveArg != null && rawMessageText is UiText.ResourceString) {
-        UiText.ResourceString((rawMessageText as UiText.ResourceString).resId, moveArg!!)
+       // UiText.ResourceString((rawMessageText as UiText.ResourceString).resId, moveArg!!)
+
+        UiText.ResourceString(
+            resId = (rawMessageText as UiText.ResourceString).resId,
+            args = arrayOf(moveArg!!)
+        )
     } else {
         rawMessageText
     }

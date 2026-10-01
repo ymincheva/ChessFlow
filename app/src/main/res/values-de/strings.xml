@@ -5,7 +5,8 @@
     <string name="welcome_text">Lerne von den Legenden! Löse einzigartige Meisterklassen-Rätsel, die aus historischen Partien generiert wurden, und verbessere deine Taktik. Steigere deine Elo-Zahl noch heute mit ChessFlow!</string>
     <string name="sign_in_with_google">Mit Google anmelden</string>
     <string name="puzzles">Puzzles</string>
-    <string name="analyze">Analysieren</string>
+    <string name="analyze">Position analysieren</string>
+    <string name="get_best_move">Bester Zug</string>
     <string name="profile">Profil</string>
     <string name="about">Über ChessFlow</string>
     <string name="select_difficulty">Schwierigkeitsgrad auswählen :</string>
@@ -130,4 +131,42 @@
     <string name="difficulty_medium">Mittel</string>
     <string name="difficulty_hard">Schwer</string>
     <string name="difficulty_very_hard">Sehr schwer</string>
+
+    <string name="buy_me_a_coffee">☕ Projekt unterstützen (Buy Me a Coffee)</string>
+
+    <string name="error_invalid_fen">Ungültiges FEN-Format!</string>
+    <string name="error_parsing_fen">Fehler beim Parsen der FEN-Zeichenkette!</string>
+    <string name="msg_position_loaded">Position erfolgreich geladen</string>
+
+    <string name="fen_position_label">FEN-Position</string>
+    <string name="paste_fen_description">FEN einfügen</string>
+    <string name="btn_load">Laden</string>
+
+    <string name="clear_text_description">Klares FEN</string>
+
+    <string name="pgn_input_label">PGN Game / Moves</string>
+    <string name="paste_pgn_description">Paste PGN</string>
+    <string name="btn_load_pgn">Load PGN</string>
+    <string name="first_move">First Move</string>
+    <string name="previous_move">Previous Move</string>
+    <string name="next_move">Next Move</string>
+    <string name="last_move">Last Move</string>
+
+    <string name="msg_castling_updated">Rochaderechte aktualisiert</string>
+    <string name="msg_analysis_stopped">Analyse gestoppt</string>
+    <string name="msg_en_passant_updated">En-Passant-Ziel aktualisiert</string>
+
+    <string name="msg_pgn_loaded">PGN erfolgreich geladen</string>
+    <string name="error_parsing_pgn">Fehler beim Parsen der PGN</string>
+
+    <string name="check_move_quality">Zugqualität prüfen</string>
+    <string name="quality_best">Ausgezeichneter Zug</string>
+    <string name="quality_good">Guter Zug</string>
+    <string name="quality_inaccuracy">Ungenauigkeit</string>
+    <string name="quality_mistake">Fehler</string>
+    <string name="quality_blunder">Patzer</string>
+    <string name="move_quality_label">Zugqualität: %1$s</string>
+
+    <string name="error_invalid_pgn_format">Ungültiges PGN-Format! Bitte überprüfen Sie den eingegebenen Text.</string>
+    <string name="error_invalid_fen_format">Ungültige FEN-Position! Bitte überprüfen Sie die Notation.</string>
 </resources>

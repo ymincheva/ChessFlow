@@ -84,137 +84,160 @@ fun AboutScreen() {
         Toast.makeText(context, versionCopiedText, Toast.LENGTH_SHORT).show()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-
-        // Adaptive application launcher icon using AndroidView to prevent Compose XML rendering issues
-        Surface(
+        Column(
             modifier = Modifier
-                .size(96.dp)
-                .clip(CircleShape),
-            shadowElevation = 4.dp
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            AndroidView(
-                factory = { ctx ->
-                    ImageView(ctx).apply {
-                        setImageResource(R.mipmap.ic_launcher)
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-            )
-        }
 
-        // App Name Header
-        Text(
-            text = stringResource(id = R.string.app_name),
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.brown)
-            )
-        )
-
-        // Interactive Version Badge (Click to copy)
-        Surface(
-            shape = RoundedCornerShape(50),
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            modifier = Modifier.clickable { copyVersionToClipboard() }
-        ) {
-            Text(
-                text = fullVersionText,
-                style = MaterialTheme.typography.labelMedium.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
-                modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
-            )
-        }
-
-        // About description text
-        Text(
-            text = stringResource(id = R.string.about_description),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
-            ),
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = 8.dp),
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
-        )
-
-        // Open Source / GPL Notice Card
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = colorResource(id = R.color.champagne)
-            ),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(18.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            // Adaptive application launcher icon using AndroidView to prevent Compose XML rendering issues
+            Surface(
+                modifier = Modifier
+                    .size(96.dp)
+                    .clip(CircleShape),
+                shadowElevation = 4.dp
             ) {
-                Text(
-                    text = stringResource(id = R.string.open_source_notice_title),
+                AndroidView(
+                    factory = { ctx ->
+                        ImageView(ctx).apply {
+                            setImageResource(R.mipmap.ic_launcher)
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            // App Name Header
+            Text(
+                text = stringResource(id = R.string.app_name),
+                style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 17.sp,
                     color = colorResource(id = R.color.brown)
                 )
-                Text(
-                    text = stringResource(id = R.string.stockfish_license_text),
-                    fontSize = 13.5.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            )
 
-                TextButton(
-                    onClick = { openUrl("https://www.gnu.org/licenses/gpl-3.0.html") },
-                    contentPadding = PaddingValues(0.dp)
+            // Interactive Version Badge (Click to copy)
+            Surface(
+                shape = RoundedCornerShape(50),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                modifier = Modifier.clickable { copyVersionToClipboard() }
+            ) {
+                Text(
+                    text = fullVersionText,
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
+                )
+            }
+
+            // About description text
+            Text(
+                text = stringResource(id = R.string.about_description),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+            )
+
+            // Open Source / GPL Notice Card
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = colorResource(id = R.color.champagne)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.read_gpl_license),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = colorResource(id = R.color.moss_dark),
-                        fontWeight = FontWeight.Bold
+                        text = stringResource(id = R.string.open_source_notice_title),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 17.sp,
+                        color = colorResource(id = R.color.brown)
                     )
+                    Text(
+                        text = stringResource(id = R.string.stockfish_license_text),
+                        fontSize = 13.5.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    TextButton(
+                        onClick = { openUrl("https://www.gnu.org/licenses/gpl-3.0.html") },
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.read_gpl_license),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = colorResource(id = R.color.moss_dark),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
-        }
 
-        // GitHub Repository Link Button
-        Button(
-            onClick = { openUrl("https://github.com/ymincheva/ChessFlow") },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.moss_dark),
-                contentColor = Color.White
-            ),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-        ) {
+            // GitHub Repository Link Button
+            Button(
+                onClick = { openUrl("https://github.com/ymincheva/ChessFlow") },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.moss_dark),
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.view_source_code),
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
+            // Buy Me a Coffee Support Button
+            Button(
+                onClick = { openUrl("https://www.buymeacoffee.com/chessflow") },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.bmac_yellow),
+                    contentColor = colorResource(id = R.color.moss_dark),
+                 ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.buy_me_a_coffee),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Developer Credits Footer
             Text(
-                text = stringResource(id = R.string.view_source_code),
-                fontWeight = FontWeight.Medium
+                text = stringResource(id = R.string.developer_credits),
+                style = MaterialTheme.typography.bodySmall.copy(
+                    textAlign = TextAlign.Center,
+                    color = Color.Gray
+                )
             )
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Developer Credits Footer
-        Text(
-            text = stringResource(id = R.string.developer_credits),
-            style = MaterialTheme.typography.bodySmall.copy(
-                textAlign = TextAlign.Center,
-                color = Color.Gray
-            )
-        )
     }
 }

@@ -5,7 +5,8 @@
     <string name="welcome_text">Учете се от легендите! Решавайте уникални майсторски пъзели, генерирани от исторически игри, и усъвършенствайте тактиката си. Повишете ELO с ChessFlow още днес!</string>
     <string name="sign_in_with_google">Влез с Google</string>
     <string name="puzzles">Пъзели</string>
-    <string name="analyze">Анализирайте</string>
+    <string name="analyze">Анализирайте позицията</string>
+    <string name="get_best_move">Вземи най-добрия ход</string>
     <string name="profile">Профил</string>
     <string name="about">Относно</string>
     <string name="select_difficulty">Изберете трудност :</string>
@@ -130,4 +131,41 @@
     <string name="difficulty_hard">Трудно</string>
     <string name="difficulty_very_hard">Много трудно</string>
 
+    <string name="buy_me_a_coffee">☕ Подкрепи проекта (Buy Me a Coffee)</string>
+
+    <string name="error_invalid_fen">Невалиден FEN формат!</string>
+    <string name="error_parsing_fen">Грешка при парсиране на FEN!</string>
+    <string name="msg_position_loaded">Позицията е заредена успешно</string>
+
+    <string name="fen_position_label">FEN позиция</string>
+    <string name="paste_fen_description">Залепи FEN</string>
+    <string name="btn_load">Зареди</string>
+
+    <string name="clear_text_description">Изчисти FEN</string>
+
+    <string name="pgn_input_label">PGN Партия / Ходове</string>
+    <string name="paste_pgn_description">Залепи PGN</string>
+    <string name="btn_load_pgn">Зареди PGN</string>
+    <string name="first_move">Първи ход</string>
+    <string name="previous_move">Предишен ход</string>
+    <string name="next_move">Следващ ход</string>
+    <string name="last_move">Последен ход</string>
+
+    <string name="msg_castling_updated">Правата за рокада са обновени</string>
+    <string name="msg_analysis_stopped">Анализът беше спрян</string>
+    <string name="msg_en_passant_updated">Целта за ан-пасан е обновена</string>
+
+    <string name="msg_pgn_loaded">PGN е зареден успешно</string>
+    <string name="error_parsing_pgn">Грешка при разчитането на PGN</string>
+
+    <string name="check_move_quality">Провери качеството на хода</string>
+    <string name="quality_best">Перфектен ход</string>
+    <string name="quality_good">Стабилен ход</string>
+    <string name="quality_inaccuracy">Неточност</string>
+    <string name="quality_mistake">Грешка</string>
+    <string name="quality_blunder">Груба грешка</string>
+    <string name="move_quality_label">Качество на хода: %1$s</string>
+
+    <string name="error_invalid_pgn_format">Невалиден PGN формат! Моля, проверете въведения текст.</string>
+    <string name="error_invalid_fen_format">Невалидна FEN позиция! Моля, проверете нотацията.</string>
 </resources>
